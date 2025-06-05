@@ -9,6 +9,7 @@ import './index.css'
 class TopRatedMovies extends Component {
   state = {
     topRatedMoviesData: [],
+    topRatedMoviesPageNumber: 1,
   }
 
   componentDidMount() {
@@ -16,8 +17,9 @@ class TopRatedMovies extends Component {
   }
 
   getTopRatedMovies = async () => {
+    const {topRatedMoviesPageNumber} = this.state
     const response = await fetch(
-      'https://api.themoviedb.org/3/movie/top_rated?api_key=6de6464c60dc6e29adb8a0eb4dec6103&language=en-US&page=1',
+      `https://api.themoviedb.org/3/movie/top_rated?api_key=6de6464c60dc6e29adb8a0eb4dec6103&language=en-US&page=${topRatedMoviesPageNumber}`,
     )
     const data = await response.json()
     //  console.log(data)
@@ -35,8 +37,36 @@ class TopRatedMovies extends Component {
     })
   }
 
+  onClickingPrevBtn = () => {
+    const {topRatedMoviesPageNumber} = this.state
+    if (topRatedMoviesPageNumber > 1) {
+      this.setState(
+        prevState => ({
+          topRatedMoviesPageNumber: prevState.topRatedMoviesPageNumber - 1,
+        }),
+        this.getTopRatedMovies,
+      )
+    } else {
+      this.setState(
+        {
+          topRatedMoviesPageNumber: 1,
+        },
+        this.getTopRatedMovies,
+      )
+    }
+  }
+
+  onClickingNxtBtn = () => {
+    this.setState(
+      prevState => ({
+        topRatedMoviesPageNumber: prevState.topRatedMoviesPageNumber + 1,
+      }),
+      this.getTopRatedMovies,
+    )
+  }
+
   render() {
-    const {topRatedMoviesData} = this.state
+    const {topRatedMoviesData, topRatedMoviesPageNumber} = this.state
     // console.log(topRatedMoviesData)
     return (
       <div className="top-rated-bg-container">
@@ -67,6 +97,23 @@ class TopRatedMovies extends Component {
             </li>
           ))}
         </ul>
+        <div className="pagination-container">
+          <button
+            type="button"
+            className="pagination-btn"
+            onClick={this.onClickingPrevBtn}
+          >
+            Prev
+          </button>
+          <p className="page-number">{topRatedMoviesPageNumber}</p>
+          <button
+            type="button"
+            className="pagination-btn"
+            onClick={this.onClickingNxtBtn}
+          >
+            Next
+          </button>
+        </div>
       </div>
     )
   }

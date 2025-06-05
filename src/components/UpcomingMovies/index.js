@@ -9,6 +9,7 @@ import './index.css'
 class UpcomingMovies extends Component {
   state = {
     upcomingMoviesData: [],
+    upcomingMoviesPageNumber: 1,
   }
 
   componentDidMount() {
@@ -16,8 +17,9 @@ class UpcomingMovies extends Component {
   }
 
   getUpcomingMovies = async () => {
+    const {upcomingMoviesPageNumber} = this.state
     const response = await fetch(
-      'https://api.themoviedb.org/3/movie/upcoming?api_key=6de6464c60dc6e29adb8a0eb4dec6103&language=en-US&page=1',
+      `https://api.themoviedb.org/3/movie/upcoming?api_key=6de6464c60dc6e29adb8a0eb4dec6103&language=en-US&page=${upcomingMoviesPageNumber}`,
     )
     const data = await response.json()
     //  console.log(data)
@@ -35,8 +37,36 @@ class UpcomingMovies extends Component {
     })
   }
 
+  onClickingPrevBtn = () => {
+    const {upcomingMoviesPageNumber} = this.state
+    if (upcomingMoviesPageNumber > 1) {
+      this.setState(
+        prevState => ({
+          upcomingMoviesPageNumber: prevState.upcomingMoviesPageNumber - 1,
+        }),
+        this.getUpcomingMovies,
+      )
+    } else {
+      this.setState(
+        {
+          upcomingMoviesPageNumber: 1,
+        },
+        this.getUpcomingMovies,
+      )
+    }
+  }
+
+  onClickingNxtBtn = () => {
+    this.setState(
+      prevState => ({
+        upcomingMoviesPageNumber: prevState.upcomingMoviesPageNumber + 1,
+      }),
+      this.getUpcomingMovies,
+    )
+  }
+
   render() {
-    const {upcomingMoviesData} = this.state
+    const {upcomingMoviesData, upcomingMoviesPageNumber} = this.state
     //  console.log(upcomingMoviesData)
     return (
       <div className="upcoming-bg-container">
@@ -64,6 +94,23 @@ class UpcomingMovies extends Component {
             </li>
           ))}
         </ul>
+        <div className="pagination-container">
+          <button
+            type="button"
+            className="pagination-btn"
+            onClick={this.onClickingPrevBtn}
+          >
+            Prev
+          </button>
+          <p className="page-number">{upcomingMoviesPageNumber}</p>
+          <button
+            type="button"
+            className="pagination-btn"
+            onClick={this.onClickingNxtBtn}
+          >
+            Next
+          </button>
+        </div>
       </div>
     )
   }

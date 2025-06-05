@@ -9,6 +9,7 @@ import './index.css'
 class Home extends Component {
   state = {
     popularMoviesData: [],
+    pageNumber: 1,
   }
 
   componentDidMount() {
@@ -16,8 +17,9 @@ class Home extends Component {
   }
 
   getPopularMovies = async () => {
+    const {pageNumber} = this.state
     const response = await fetch(
-      'https://api.themoviedb.org/3/movie/popular?api_key=6de6464c60dc6e29adb8a0eb4dec6103&language=en-US&page=1',
+      `https://api.themoviedb.org/3/movie/popular?api_key=6de6464c60dc6e29adb8a0eb4dec6103&language=en-US&page=${pageNumber}`,
     )
     const data = await response.json()
     // console.log(data)
@@ -35,8 +37,37 @@ class Home extends Component {
     })
   }
 
+  onClickingPrevBtn = () => {
+    const {pageNumber} = this.state
+    if (pageNumber > 1) {
+      this.setState(
+        prevState => ({
+          pageNumber: prevState.pageNumber - 1,
+        }),
+        this.getPopularMovies,
+      )
+    } else {
+      this.setState(
+        {
+          pageNumber: 1,
+        },
+        this.getPopularMovies,
+      )
+    }
+  }
+
+  onClickingNxtBtn = () => {
+    const {pageNumber} = this.state
+    this.setState(
+      prevState => ({
+        pageNumber: prevState.pageNumber + 1,
+      }),
+      this.getPopularMovies,
+    )
+  }
+
   render() {
-    const {popularMoviesData} = this.state
+    const {popularMoviesData, pageNumber} = this.state
 
     return (
       <div className="home-bg-container">
@@ -66,6 +97,23 @@ class Home extends Component {
             </li>
           ))}
         </ul>
+        <div className="pagination-container">
+          <button
+            type="button"
+            className="pagination-btn"
+            onClick={this.onClickingPrevBtn}
+          >
+            Prev
+          </button>
+          <p className="page-number">{pageNumber}</p>
+          <button
+            type="button"
+            className="pagination-btn"
+            onClick={this.onClickingNxtBtn}
+          >
+            Next
+          </button>
+        </div>
       </div>
     )
   }
