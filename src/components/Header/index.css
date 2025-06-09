@@ -8,6 +8,9 @@
   background-color: #0c1154;
   color: #ffffff;
 }
+.logo-title-link{
+  text-decoration: none;
+}
 .movieDb-title {
   color: #4c915c;
   font-size: 35px;

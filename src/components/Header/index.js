@@ -35,7 +35,7 @@ class Header extends Component {
 
           return (
             <div className="header-container">
-              <Link to="/">
+              <Link to="/" className="logo-title-link">
                 <h1 className="movieDb-title">movieDB</h1>
               </Link>
               <div className="search-container">
