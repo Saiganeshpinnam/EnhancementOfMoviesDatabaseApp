@@ -36,9 +36,7 @@ class Header extends Component {
           return (
             <div className="header-container">
               <Link to="/">
-                <button type="button" className="movieDb-title">
-                  movieDB
-                </button>
+                <h1 className="movieDb-title">movieDB</h1>
               </Link>
               <div className="search-container">
                 <input
@@ -49,10 +47,13 @@ class Header extends Component {
                   value={searchInput}
                 />
 
-                <BsSearch
-                  className="search-icon"
+                <button
+                  type="button"
                   onClick={() => this.onClickingSearchIcon(updateSearchedMovie)}
-                />
+                  className="search-btn"
+                >
+                  Search
+                </button>
               </div>
               <div className="categories-container">
                 <Link to="/">
